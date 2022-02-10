@@ -1,82 +1,129 @@
-//function that randomly returns rock/paper/scissor
-function computerPlay(num)
+
+const buttons = document.querySelectorAll('.b');
+const player = document.querySelector('.player');
+const computer = document.querySelector('.computer');
+let win = document.querySelector('.win');
+const resetBtn = document.querySelector('.reset');
+
+resetBtn.addEventListener('click',() => window.location.reload());
+
+let compInc = 0;
+let playerInc = 0
+
+function computerPlay()
 {
+    let num= Math.floor(Math.random() * 3 + 1);
     if(num === 1)
     {
-        return 'Rock';
+        return 'rock';
     }
     else if(num === 2)
     {
-        return 'Paper';
+        return 'paper';
     }
     else if(num === 3)
     {
-        return 'Scissors';
+        return 'scissors';
     }
-    
 }
 
-let playerWinCount = 0;
-let computerWinCount = 0;
+function pWin()
+{
+    player.textContent = `Player win count: ${++playerInc}`;
+    if(playerInc === 5)
+    {
+        result(1); // 1 tells that player wins
+    }
+}
+
+function cWin()
+{
+    computer.textContent = `Computer win count: ${++compInc}`;
+    if(compInc === 5)
+    {
+        result(0); // 0 tells that comp wins
+    }
+}
 
 function playRound(playerSelection, computerSelection)
 {
-    if(playerSelection.toLowerCase() === computerSelection.toLowerCase())
+    if(playerSelection === computerSelection)
     {
+        player.textContent = `Player win count: ${playerInc}`;
+        computer.textContent = `Computer win count: ${compInc}`;
         return 'game tied';
     }
-    else if( playerSelection.toLowerCase() === 'rock')
+    else if( playerSelection === 'rock')
     {
-        if(computerSelection.toLowerCase() === 'scissors')
+        if(computerSelection === 'scissors')
         {
-            playerWinCount++;
+            pWin();
             return 'You Win! Rock beats Scissors';
         }
         else
         {
-            computerWinCount++;
+            cWin();
             return 'You Lose! Paper beats Rock';
         }
     }
-    else if( playerSelection.toLowerCase()=== 'paper')
+    else if( playerSelection === 'paper')
     {
-        if(computerSelection.toLowerCase() === 'rock')
+        if(computerSelection === 'rock')
         {
-            playerWinCount++;
+            pWin();
             return 'You Win! Paper beats Rock';
         }
         else
         {
-            computerWinCount++;
+            cWin();
             return 'You Lose! Scissor beats Paper';
         }
     }
-    else if( playerSelection.toLowerCase()=== 'scissors')
+    else if( playerSelection === 'scissors')
     {
-        if(computerSelection.toLowerCase() === 'paper')
+        if(computerSelection === 'paper')
         {
-            playerWinCount++;
+            pWin();
             return 'You Win! Scissor beats Paper';
         }
         else
         {
-            computerWinCount++;
+            cWin();
             return 'You Lose! Rock beats Scissors';
         }
     }
 }
 
-const buttons = document.querySelectorAll('button');
+let playerSelection;
 buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-        let randomNum = Math.floor(Math.random() * 3 + 1);
-        const computerSelection = computerPlay(randomNum);
-        //console.log(button.textContent);
-        const playerSelection = button.textContent;
-        const div = document.querySelector('.output');
-        div.textContent = playRound(playerSelection, computerSelection);
-    });
+    button.addEventListener('click', getSelection);
 });
+
+function getSelection(button)
+{
+    playerSelection = button.target.textContent.toLowerCase();
+    console.log(playerSelection);
+    let computerSelection = computerPlay();
+    win.textContent = playRound(playerSelection, computerSelection);
+}
+
+function result(num)
+{
+    const result = document.querySelector('.result');
+    if(num === 1)
+    {
+        result.textContent = 'You Win';
+    }
+    if(num === 0)
+    {
+        result.textContent = 'Computer Wins';
+    }
+    
+    buttons.forEach((button) => {
+        button.removeEventListener('click', getSelection); 
+    });
+}
+     
 
 
 
